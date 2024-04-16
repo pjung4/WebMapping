@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <title>Fixed Map</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js'></script>
+      
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css' rel='stylesheet' />
+
+    <style>
+         body { margin:50px; padding:0; }
+           #map1 { position:relative; height:300px; width:50%;}
+        
+    #map2 { position:relative; height:300px; width:50%;}
+        
+        #map3 { position:relative; height:300px; width:50%;}
+        /* 2.5.2 Insert additional CSS code here between the <style> tags */
+
+    </style>
+  </head>
+
+  <body>
+     <h1> My Favorite Places in the Bay Area</h1>
+      <hr>
+        <h1> Map 1: </h1>
+      <h2> Sibley Regional Volcanic Preserve hosts some incredibly unique landscapes and a complex network of hiking trails with views of the Golden Gate Bridge. </h2>
+         <div id='map1'></div>
+   <hr>
+     <h1> Map 2:</h1>
+      <h2> Limantour Beach is a remote beach in Point Reyes National Seashore. The trail to this beach is one of my favorite parts, as it takes you through a beautiful salt marsh that supports diverse wildlife. </h2>
+     <div id='map2'></div>   
+<hr>
+     <h1> Map 3:</h1>
+      <h2> Stinson Beach is one of the most popular beaches in the Bay Area. Its location near Mt. Tam in Marin County means it is accessible, yet still relatively untouched. </h2>
+     <div id='map3'></div> 
+      <hr>
+      
+        <script>
+            /* Insert the JavaScript within the <script> tags, within the body */
+            mapboxgl.accessToken = 'pk.eyJ1IjoicGFya2VyanVuZ2ciLCJhIjoiY2x1bGhvcGJrMTQ0dDJqbnVreXAxZjg4dSJ9.YmoK9NNUb-0N-YuvNho8pg';
+
+
+               var map = new mapboxgl.Map({
+       container: 'map1',
+       style: 'mapbox://styles/mapbox/navigation-night-v1', 
+       center: [-122.20326, 37.85495], 
+       zoom: 11
+   });
+            var popup = new mapboxgl.Popup()
+                      .setText('Sibley Regional Volcanic Preserve');
+
+            var marker = new mapboxgl.Marker({color:'green'})
+                    .setLngLat([-122.20326, 37.85495]) 
+                    .setPopup(popup) 
+		    .addTo(map); 
+
+               map.dragPan.disable();
+               map.scrollZoom.disable();
+               map.boxZoom.disable();
+               map.dragRotate.disable();
+               map.keyboard.disable();
+               map.doubleClickZoom.disable();
+               map.touchZoomRotate.disable();
+               map.touchZoomRotate.disableRotation();
+
+
+             var map2 = new mapboxgl.Map({
+         container: 'map2',
+         style: 'mapbox://styles/mapbox/navigation-night-v1',
+         center: [-122.8821, 38.02889],
+         zoom: 11
+         });
+
+         var popup2 = new mapboxgl.Popup()
+         .setText('Limantour Beach');
+
+         var marker2 = new mapboxgl.Marker({color:'blue'})
+           .setLngLat([-122.8821, 38.02889]) 
+           .setPopup(popup2)
+           .addTo(map2);
+            
+         map2.dragPan.disable();
+         map2.scrollZoom.disable();
+         map2.boxZoom.disable();
+         map2.dragRotate.disable();
+         map2.keyboard.disable();
+         map2.doubleClickZoom.disable();
+         map2.touchZoomRotate.disable();
+         map2.touchZoomRotate.disableRotation();
+            
+
+            var map3 = new mapboxgl.Map({
+       container: 'map3',
+       style: 'mapbox://styles/mapbox/navigation-night-v1', 
+       center: [-122.6444, 37.9005], 
+       zoom: 11
+   });
+            var popup3 = new mapboxgl.Popup()
+                      .setText('Stinson Beach');
+
+            var marker3 = new mapboxgl.Marker({color:'yellow'})
+                    .setLngLat([-122.6444, 37.9005]) 
+                    .setPopup(popup3) 
+		    .addTo(map3); 
+
+               map3.dragPan.disable();
+               map3.scrollZoom.disable();
+               map3.boxZoom.disable();
+               map3.dragRotate.disable();
+               map3.keyboard.disable();
+               map3.doubleClickZoom.disable();
+               map3.touchZoomRotate.disable();
+               map3.touchZoomRotate.disableRotation();
+    
+    map.getCanvas().style.cursor = 'default';
+	map2.getCanvas().style.cursor = 'default';
+    map3.getCanvas().style.cursor = 'default';
+            
+        </script>
+  </body>
+</html>
