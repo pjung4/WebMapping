@@ -98,19 +98,20 @@
      <p style="margin-left: 10px; margin-right: 10px;">
        This is a map showing every single person in the Portland Area as a dot. Data is taken from the 2017 US Census, and is accurate at the level of a block; however, within each block location is randomized. Points are colored based on the number of home owners versus renters on a block.
      </p>
-<!-- map legend -->
-   </div>
-      <div class="LegendContainer">
-     <div class="legendItem">
+     </div>
+     <!-- map legend -->
+    <div class="LegendContainer">
+    <div class="legendItem">
          <span class="owner">&#11044;</span>
          <span class="layerDescription">Owners</span>
-     </div>
-     <div class="legendItem">
+    </div>
+    <div class="legendItem">
          <span class="renter">&#11044;</span>
          <span class="layerDescription">Renters</span>
-     </div>
-   </div>
+    </div>
+    </div>
    <script>
+     <!-- add style from mapbox-->
      mapboxgl.accessToken = 'pk.eyJ1IjoicGFya2VyanVuZ2ciLCJhIjoiY2x1bGhvcGJrMTQ0dDJqbnVreXAxZjg4dSJ9.YmoK9NNUb-0N-YuvNho8pg'; 
      var map = new mapboxgl.Map({
          container: 'map', // container id
@@ -118,6 +119,7 @@
      });
      map.addControl(new mapboxgl.NavigationControl());
        var state = { panelOpen: true };
+       
        <!-- add interaction to legend -->
       function panelSelect(e){
         if(state.panelOpen){
