@@ -2,135 +2,166 @@
  <html>
  <head>
      <meta charset='utf-8' />
-     <title>Owners vs Renters Map</title>
+     <title>Swipe between maps</title>
      <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
      <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js'></script>
      <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css' rel='stylesheet' />
-     <style>
-          /*  stlye for paragraph tags */
-   p {
-     color: white;
-   }
-
-   /* style for heading level 4 tags */
-   h4 {
-     color: white;
-     margin-left: 10px;
-   }
-
-   /*  style for items with the class "LegendContainer" */
-   .LegendContainer {
-     position: absolute;
-     bottom: 20px;
-     left: 20px;
-     z-index: 2;
-     width: 300px;
-     height: 40px;
-     background: rgba(80, 80, 80, .75);
-     transition: width 2s, height 2s; /* this is the time it takes for the container to transition */
-     border-radius: 7px;
-   }
-
-   /*  style for items with the class "descriptionPanel" */
-   .descriptionPanel {
-     position: absolute;
-     bottom: 65px;
-     left: 20px;
-     z-index: 2;
-     width: 300px;
-     height: 40px;
-     background: rgba(80, 80, 80, .75);
-     transition: width 2s, height 2s;
-     overflow: hidden;
-     border-radius: 7px;
-   }
-
-   /*  style for items with the class "descriptionPanel" when active */
-   .LegendContainer:active {
-     width: 240px;
-     height: 250px;
-   }
-
-   /* style for items with the class "legendItem" */
-   .legendItem {
-       margin: 0px;
-       padding-left: 10px;
-       display:inline-block;
-       margin:auto;
-       transform: translate(50%, 50%);
-   }
-        
-
-   /* style for items with the class "layerDescription" */
-   .layerDescription {
-     color: white;
-     padding-left: 10px;
-   }
-
-        
-   .renter {
-         color:#00bdbd;
-   }
-   .owner{
-         color:#fdd01c;
-   }
-
-   /* style for items with the class "chevron" */
-   .chevron {
-     position: relative;
-     margin-left: 45%;
-     font-size: x-large;
-     color: white;
-   }
-         body { margin:0; padding:0; }
-         #map { position:absolute; top:0; bottom:0; width:100%; }
+		
+     <!-- JS and CSS for the swipe plugin -->
+     <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.js'></script>
+     <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-compare/v0.4.0/mapbox-gl-compare.css' type='text/css' />
+    <style>
+    #title {z-index: 9999; background-color:white; opacity: 80%; text-align: center; color: #92664a}
+      body { margin:0; padding:0;overflow: hidden;}
+      body * {
+         -webkit-touch-callout: none;
+           -webkit-user-select: none;
+          -moz-user-select: none;
+           -ms-user-select: none;
+               user-select: none;
+          }
+		 
+      .map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+          }
      </style>
- </head>
- <body>
+</head>
+<body>
+     <div id="comparison-container">
+      		<div id='owners' class='map'></div>  <!-- div for owners map div -->
+      		<div id='renters' class='map'></div> <!--  div for renters map div -->
+  		</div>
+    <div id='title'>
+     		<h1>Percentage of Renters vs. Owners in Portland, OR</h1>
+     		<h3>By: Parker Jung</h3>
+    <script>
+        //OWNER MAP
+            //Add data, set center, zoom, and style
+        mapboxgl.accessToken = 'pk.eyJ1IjoicGFya2VyanVuZ2ciLCJhIjoiY2x1bGhvcGJrMTQ0dDJqbnVreXAxZjg4dSJ9.YmoK9NNUb-0N-YuvNho8pg';
+        var ownerMap = new mapboxgl.Map({
+            container: 'owners', 
+            style: 'mapbox://styles/mapbox/dark-v10',  
+            center: [-122.676483,45.523064], 
+            zoom: 10 
+            });
+        ownerMap.on('load', function() {
+        ownerMap.addLayer({
+            id: 'Owner Data',
+            type: "fill",
+            source: {
+            type: 'vector',
+            url: 'mapbox://parkerjungg.9ifafeya'  
+            },
+         'source-layer': 'Owner-Renter-Pop-4pe0ip', 
+         paint: {
+            'fill-color':
+               ["step",
+                ["get", "Own"],
+                "hsl(225, 100%, 97%)",
+                17.0,
+                "hsl(203, 47%, 82%)",
+                22.0,
+                "hsl(202, 57%, 63%)",
+                27.0,
+                "#3182bd",
+                32.0,
+                 "hsl(210, 90%, 32%)"
+               ],
+            "fill-opacity": 0.7}       
+            });
+            });
+         var popup = new mapboxgl.Popup({
+             closeButton: false,
+             closeOnClick: false
+             });
+          ownerMap.on('mousemove', 'Owner Data', function (e) {
+        
+              // Change the cursor style as a UI indicator.
+         ownerMap.getCanvas().style.cursor = 'pointer';
 
-   <div id='map'></div>
-     <!-- map description panel -->
-     <div class="descriptionPanel" id="descriptionPanel" style="height: 250px;">
-     <span onClick=panelSelect() id="glyph" class="chevron glyphicon glyphicon-chevron-down"></span>
-     <hr/>
-     <h4>WHAT AM I LOOKING AT?</h4>
-     <p style="margin-left: 10px; margin-right: 10px;">
-       This is a map showing every single person in the Portland Area as a dot. Data is taken from the 2017 US Census, and is accurate at the level of a block; however, within each block location is randomized. Points are colored based on the number of home owners versus renters on a block.
-     </p>
-<!-- map legend -->
-   </div>
-      <div class="LegendContainer">
-     <div class="legendItem">
-         <span class="owner">&#11044;</span>
-         <span class="layerDescription">Owners</span>
-     </div>
-     <div class="legendItem">
-         <span class="renter">&#11044;</span>
-         <span class="layerDescription">Renters</span>
-     </div>
-   </div>
-   <script>
-     mapboxgl.accessToken = 'pk.eyJ1IjoicGFya2VyanVuZ2ciLCJhIjoiY2x1bGhvcGJrMTQ0dDJqbnVreXAxZjg4dSJ9.YmoK9NNUb-0N-YuvNho8pg'; 
-     var map = new mapboxgl.Map({
-         container: 'map', // container id
-         style: 'mapbox://styles/parkerjungg/clv2q8d8f00d101rj8qe2ct7d' // stylesheet location
-     });
-     map.addControl(new mapboxgl.NavigationControl());
-       var state = { panelOpen: true };
-       <!-- add interaction to legend -->
-      function panelSelect(e){
-        if(state.panelOpen){
-          document.getElementById('descriptionPanel').style.height = '26px';
-          document.getElementById('glyph').className = "chevron glyphicon glyphicon-chevron-up";
-          state.panelOpen = false;
-        } else {
-          document.getElementById('descriptionPanel').style.height = '250px';
-          document.getElementById('glyph').className = "chevron glyphicon glyphicon-chevron-down";
-          state.panelOpen = true;
-        }
-      }
-   </script>
+         var coordinates = e.lngLat;
+         var description = e.features[0].properties.Own;
 
+              // Populate the popup and set its coordinates
+              // based on the feature found.
+         popup.setLngLat(coordinates)
+            .setHTML("Owners: " + description + "%")
+            .addTo(ownerMap);
+            });
+
+         ownerMap.on('mouseleave', 'Owner Data', function () {
+             ownerMap.getCanvas().style.cursor = '';
+             popup.remove();
+            });
+        
+        
+        
+        //RENTER MAP
+         var renterMap = new mapboxgl.Map({
+             container: 'renters', // owners map div 
+             style: 'mapbox://styles/mapbox/dark-v10', 
+             center: [-122.676483,45.523064],
+             zoom: 10 
+            });
+         renterMap.on('load', function() {
+             renterMap.addLayer({
+                 id: 'Renter Data',
+                 type: "fill",
+                 source: {
+                 type: 'vector',
+                 url: 'mapbox://parkerjungg.9ifafeya'},
+        'source-layer': 'Owner-Renter-Pop-4pe0ip', 
+      paint: {
+        'fill-color': 
+             ["step",
+              ["get", "Rent"],
+              "hsl(143, 38%, 95%)",
+              17.0,
+              "hsl(142, 48%, 76%)",
+              22.0,
+              "#66cc90",
+              27.0,
+              "hsl(147, 70%, 45%)",
+              32.0,
+              "hsl(150, 80%, 32%)"],
+          "fill-opacity": 0.7,}
+            });
+             
+             // Create a popup, but don't add it to the map yet.
+        var popup2 = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false
+            });
+        
+        renterMap.on('mousemove', 'Renter Data', function (e) {
+        
+            // Change the cursor style as a UI indicator.
+         renterMap.getCanvas().style.cursor = 'pointer';
+    
+         var coordinates = e.lngLat;
+         var description = e.features[0].properties.Rent;
+    
+            // Populate the popup and set its coordinates
+            // based on the feature found.
+         popup2.setLngLat(coordinates)
+             .setHTML("Renters: " + description + "%")
+             .addTo(renterMap);
+            });
+
+     renterMap.on('mouseleave', 'Renter Data', function () {
+     	renterMap.getCanvas().style.cursor = '';
+     	popup2.remove();
+            });
+            });
+        // A selector or reference to HTML element
+         var container = '#comparison-container';
+         var map = new mapboxgl.Compare(ownerMap, renterMap, container, {
+            })
+    ownerMap.addControl(new mapboxgl.NavigationControl());
+    renterMap.addControl(new mapboxgl.NavigationControl());
+    </script>
  </body>
  </html>
